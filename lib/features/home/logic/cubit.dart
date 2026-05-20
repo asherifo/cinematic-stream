@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:netfilix/core/const/api_const.dart';
 import 'package:netfilix/features/home/data/movie_model.dart';
 import 'package:netfilix/features/home/logic/state.dart';
 
@@ -8,15 +9,26 @@ class HomeCubit extends Cubit<HomeState> {
 
   Dio dio = Dio();
 
-  Future getNowPlaying() async {
+  Future<void> fetchAllMovies() async {
     emit(HomeLoadingState());
 
     try {
-      final response = await dio.get(
-        "https://api.themoviedb.org/3/movie/now_playing?api_key=87903828b97a85b50c60fb3bbd960c55",
+      final responses = await Future.wait([
+        dio.get(ApiConst.nowPlaying),
+        dio.get(ApiConst.popular),
+        dio.get(ApiConst.topRated),
+      ]);
+
+      final nowPlayingData = MovieModel.fromJson(responses[0].data);
+      final popularData = MovieModel.fromJson(responses[1].data);
+      final topRatedData = MovieModel.fromJson(responses[2].data);
+      emit(
+        HomeSuccessState(
+          nowPlayingMovies: nowPlayingData,
+          popularMovies: popularData,
+          topRatedMovies: topRatedData,
+        ),
       );
-      final resalt = MovieModel.fromJson(response.data);
-      emit(HomeSuccessState(movies: resalt));
     } catch (e) {
       emit(HomeErrorState(errorMesage: e.toString()));
     }

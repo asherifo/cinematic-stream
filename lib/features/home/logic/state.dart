@@ -13,6 +13,13 @@ class HomeErrorState extends HomeState {
 }
 
 class HomeSuccessState extends HomeState {
-  MovieModel movies;
-  HomeSuccessState({required this.movies});
+  final MovieModel nowPlayingMovies;
+  final MovieModel popularMovies;
+  final MovieModel topRatedMovies;
+
+  HomeSuccessState({
+    required this.nowPlayingMovies,
+    required this.popularMovies,
+    required this.topRatedMovies,
+  });
 }

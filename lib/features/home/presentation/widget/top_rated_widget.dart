@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:netfilix/features/home/logic/cubit.dart';
+import 'package:netfilix/features/home/logic/state.dart';
 
 class TopRatedWidget extends StatelessWidget {
   const TopRatedWidget({super.key});
@@ -16,25 +19,47 @@ class TopRatedWidget extends StatelessWidget {
             'Top Rated',
             style: TextStyle(color: Colors.white, fontSize: 16),
           ),
-
-          SizedBox(
-            height: 158,
-            child: ListView.builder(
-              itemCount: 10,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: InkWell(
-                    onTap: () {
-                      // ignore: avoid_print
-                      print('Go To Top Rated Movie');
+          BlocBuilder<HomeCubit, HomeState>(
+            builder: (context, state) {
+              if (state is HomeLoadingState) {
+                return Center(child: CircularProgressIndicator());
+              } else if (state is HomeSuccessState) {
+                final moviesList = state.topRatedMovies.results!;
+                return SizedBox(
+                  height: 158,
+                  child: ListView.builder(
+                    itemCount: moviesList.length,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              '/detailMovie',
+                              arguments: moviesList[index],
+                            );
+                          },
+                          child: Image.network(
+                            "https://image.tmdb.org/t/p/w500${state.topRatedMovies.results![index].posterPath!}",
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
                     },
-                    child: Image.asset('assets/images/movie.png'),
                   ),
                 );
-              },
-            ),
+              } else if (state is HomeErrorState) {
+                return Center(
+                  child: Text(
+                    state.errorMesage,
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  ),
+                );
+              }
+              return Container();
+            },
           ),
         ],
       ),

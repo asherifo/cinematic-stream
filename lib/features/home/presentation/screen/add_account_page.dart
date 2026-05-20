@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddAccount extends StatelessWidget {
   const AddAccount({super.key});
+
+  Future login(BuildContext context) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    await preferences.setBool('isLogged', true);
+    if (!context.mounted) return;
+    Navigator.pushReplacementNamed(context, '/HomePage');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +64,7 @@ class AddAccount extends StatelessWidget {
                   children: [
                     InkWell(
                       onTap: () {
-                        Navigator.pushNamed(context, '/HomePage');
+                        login(context);
                       },
                       child: Column(
                         children: [

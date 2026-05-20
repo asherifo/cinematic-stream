@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:netfilix/features/home/logic/cubit.dart';
+import 'package:netfilix/features/home/logic/state.dart';
 
 class PopularWidget extends StatelessWidget {
   const PopularWidget({super.key});
@@ -13,24 +16,50 @@ class PopularWidget extends StatelessWidget {
         children: [
           Text('Popular', style: TextStyle(color: Colors.white, fontSize: 16)),
 
-          SizedBox(
-            height: 158,
-            child: ListView.builder(
-              itemCount: 10,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: InkWell(
-                    onTap: () {
-                      // ignore: avoid_print
-                      print('Go To Popular Movie');
-                    },
-                    child: Image.asset('assets/images/movie2.png'),
+          BlocBuilder<HomeCubit, HomeState>(
+            builder: (context, state) {
+              if (state is HomeLoadingState) {
+                return Center(
+                  child: CircularProgressIndicator(
+                    backgroundColor: Colors.white,
                   ),
                 );
-              },
-            ),
+              } else if (state is HomeSuccessState) {
+                final moviesList = state.popularMovies.results!;
+                return SizedBox(
+                  height: 158,
+
+                  child: ListView.builder(
+                    itemCount: moviesList.length,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              '/detailMovie',
+                              arguments: moviesList[index],
+                            );
+                          },
+                          child: Image.network(
+                            "https://image.tmdb.org/t/p/w500${state.popularMovies.results![index].posterPath!}",
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                );
+              } else if (state is HomeErrorState) {
+                return Text(
+                  state.errorMesage,
+                  style: TextStyle(color: Colors.white),
+                );
+              }
+              return SizedBox();
+            },
           ),
         ],
       ),

@@ -28,11 +28,12 @@ class NowWatchingWidget extends StatelessWidget {
                   ),
                 );
               } else if (state is HomeSuccessState) {
+                final moviesList = state.nowPlayingMovies.results!;
                 return SizedBox(
                   height: 158,
 
                   child: ListView.builder(
-                    itemCount: 20,
+                    itemCount: moviesList.length,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
                       return Padding(
@@ -42,11 +43,11 @@ class NowWatchingWidget extends StatelessWidget {
                             Navigator.pushNamed(
                               context,
                               '/detailMovie',
-                              arguments: index,
+                              arguments: moviesList[index],
                             );
                           },
                           child: Image.network(
-                            "https://image.tmdb.org/t/p/w500${state.movies.results![index].posterPath!}",
+                            "https://image.tmdb.org/t/p/w500${state.nowPlayingMovies.results![index].posterPath!}",
                             fit: BoxFit.cover,
                           ),
                         ),

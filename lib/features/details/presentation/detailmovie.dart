@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:netfilix/features/details/logic/detail_cubit.dart';
 import 'package:netfilix/features/details/logic/detail_state.dart';
+import 'package:netfilix/features/home/data/movie_model.dart';
 
 // ignore: must_be_immutable
 class Detailmovie extends StatelessWidget {
   const Detailmovie({super.key});
-  // final int indexMovie;
 
   @override
   Widget build(BuildContext context) {
-    final int imageIndex = ModalRoute.of(context)!.settings.arguments as int;
+    final currentMovie = ModalRoute.of(context)!.settings.arguments as Results;
     return BlocProvider(
       create: (context) => DetailCubit()..getDetailsMovie(),
       child: BlocBuilder<DetailCubit, DetailState>(
@@ -24,9 +24,9 @@ class Detailmovie extends StatelessWidget {
             );
           } else if (state is DetailSuccessState) {
             final movie = state.movieDetailModel;
-
             return Scaffold(
               backgroundColor: Colors.black,
+
               body: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,7 +34,7 @@ class Detailmovie extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(top: 40),
                       child: Image.network(
-                        "https://image.tmdb.org/t/p/w500${movie.results![imageIndex].backdropPath!}",
+                        "https://image.tmdb.org/t/p/w500${currentMovie.backdropPath!}",
                         fit: BoxFit.fill,
                         height: 222,
                         width: double.infinity,
@@ -43,7 +43,7 @@ class Detailmovie extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(top: 1, left: 10),
                       child: Text(
-                        movie.results![imageIndex].originalTitle!,
+                        currentMovie.originalTitle!,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -56,7 +56,7 @@ class Detailmovie extends StatelessWidget {
                       child: Row(
                         children: [
                           Text(
-                            movie.results![imageIndex].releaseDate!,
+                            currentMovie.releaseDate!,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 16,
@@ -65,7 +65,7 @@ class Detailmovie extends StatelessWidget {
                           ),
                           Image.asset('assets/icons/ratingIcon.png'),
                           Text(
-                            ' ${movie.results![imageIndex].voteAverage!} ',
+                            ' ${currentMovie.voteAverage!} ',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 16,
@@ -80,7 +80,7 @@ class Detailmovie extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(left: 8, right: 8, bottom: 8),
                       child: Text(
-                        movie.results![imageIndex].overview!,
+                        currentMovie.overview!,
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight(400),
@@ -211,7 +211,7 @@ class Detailmovie extends StatelessWidget {
                               Navigator.pushNamed(
                                 context,
                                 '/detailMovie',
-                                arguments: index,
+                                arguments: movie.results![index],
                               );
                             },
                             child: Image.network(
@@ -236,7 +236,6 @@ class Detailmovie extends StatelessWidget {
                     context,
                     '/HomePage',
                     (route) => false,
-                    //  MaterialPageRoute(builder: (context) => FirstPage()),
                   );
                 },
                 child: Icon(Icons.chevron_left, color: Colors.white, size: 27),
