@@ -12,7 +12,7 @@
 <!-- أضف screenshots هنا - صوّر التطبيق وارفع الصور -->
 | Home | Details | Search |
 |------|---------|--------|
-| ![Home](Nitfilex/WhatsApp Image 2026-08-05 at 4.02.21 PM.jpeg) | ![Details](screenshots/details.png) | ![Search](screenshots/search.png) |
+| ![Home](Nitfilex/n1.jpeg) | ![Details](screenshots/details.png) | ![Search](screenshots/search.png) |
 
 ## 🏗️ Architecture
 
