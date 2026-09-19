@@ -12,7 +12,7 @@
 <!-- أضف screenshots هنا - صوّر التطبيق وارفع الصور -->
 | Home | Details | Search |
 |------|---------|--------|
-| ![Home](Nitfilex/n1.jpeg) | ![Details](screenshots/details.png) | ![Search](screenshots/search.png) |
+| ![Home](Nitfilex/netfilexApp.PNG) | ![Details](screenshots/details.png) | ![Search](screenshots/search.png) |
 
 ## 🏗️ Architecture
 
